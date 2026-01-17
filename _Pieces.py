@@ -171,18 +171,6 @@ class Rook(ChessPiece):
         columnIndex += columnChange
       rowIndex, columnIndex = self.position.convertToIndex()
 
-    if self.isInStartingPosition and self.position.convertToIndex() == [0, 0]:
-      if not (isinstance(chessboard[0][1], ChessPiece) or isinstance(chessboard[0][2], ChessPiece) or isinstance(chessboard[0][3], ChessPiece)) and isinstance(chessboard[0][4], King):
-        result.append(Position.convertToPosition(0, 3))
-    elif self.isInStartingPosition and self.position.convertToIndex() == [0, 7]:
-      if not (isinstance(chessboard[0][6], ChessPiece) or isinstance(chessboard[0][5], ChessPiece)) and isinstance(chessboard[0][4], King):
-        result.append(Position.convertToPosition(0, 5))
-    elif self.isInStartingPosition and self.position.convertToIndex() == [7, 0]:
-      if not (isinstance(chessboard[7][1], ChessPiece) or isinstance(chessboard[7][2], ChessPiece) or isinstance(chessboard[7][3], ChessPiece)) and isinstance(chessboard[7][4], King):
-        result.append(Position.convertToPosition(7, 3))
-    elif self.isInStartingPosition and self.position.convertToIndex() == [7, 7]:
-      if not (isinstance(chessboard[7][6], ChessPiece) or isinstance(chessboard[7][5], ChessPiece)) and isinstance(chessboard[7][4], King):
-        result.append(Position.convertToPosition(7, 5))
 
 
     return result
@@ -220,6 +208,7 @@ class King(ChessPiece):
   def __init__(self, color, position, isInStartingPosition):
     super().__init__(color, position)
     self.isInStartingPosition = isInStartingPosition
+    self.isAttemptingToCastle = False
 
   def findAllPossibleMoves(self, chessboard):
     result = []
@@ -228,20 +217,27 @@ class King(ChessPiece):
     for rowChange, columnChange in possibleIndexChanges:
       if Position.checkIfIndexIsInBounds(rowIndex + rowChange, columnIndex + columnChange) and (chessboard[rowIndex + rowChange][columnIndex + columnChange] == "__" or chessboard[rowIndex + rowChange][columnIndex + columnChange].color != self.color):
         result.append(Position.convertToPosition(rowIndex + rowChange, columnIndex + columnChange))
-    return result
 
     if self.isInStartingPosition and self.position.convertToIndex() == [0, 4]:
       if not (isinstance(chessboard[0][1], ChessPiece) or isinstance(chessboard[0][2], ChessPiece) or isinstance(chessboard[0][3], ChessPiece)) and isinstance(chessboard[0][0], Rook):
         result.append(Position.convertToPosition(0, 2))
+        self.isAttemptingToCastle = True
     elif self.isInStartingPosition and self.position.convertToIndex() == [0, 4]:
       if not (isinstance(chessboard[0][6], ChessPiece) or isinstance(chessboard[0][5], ChessPiece)) and isinstance(chessboard[0][7], Rook):
         result.append(Position.convertToPosition(0, 6))
+        self.isAttemptingToCastle = True
     elif self.isInStartingPosition and self.position.convertToIndex() == [7, 4]:
       if not (isinstance(chessboard[7][1], ChessPiece) or isinstance(chessboard[7][2], ChessPiece) or isinstance(chessboard[7][3], ChessPiece)) and isinstance(chessboard[7][0], Rook):
         result.append(Position.convertToPosition(7, 2))
+        self.isAttemptingToCastle = True
     elif self.isInStartingPosition and self.position.convertToIndex() == [7, 4]:
       if not (isinstance(chessboard[7][6], ChessPiece) or isinstance(chessboard[7][5], ChessPiece)) and isinstance(chessboard[7][7], Rook):
         result.append(Position.convertToPosition(7, 6))
+        self.isAttemptingToCastle = True
+    
+    return result
+
+    
 
 
   def __str__(self):
