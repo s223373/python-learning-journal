@@ -113,6 +113,19 @@ while not board.checkForCheckmate("white") and not board.checkForCheckmate("blac
 
           if isinstance(piece, p.Pawn) and piece.isInStartingPosition:
             piece.isInStartingPosition = False #updates the pawn attribute if we move the pawn
+          
+          if isinstance(piece, p.King) and piece.isAttemptingToCastle:
+            if endColumnIndex == 2: #queenside castle
+              rook = board.chessboard[startRowIndex][0]
+              rook.position = p.Position.convertToPosition(startRowIndex + 1, "D")
+              board.chessboard[startRowIndex][3] = rook
+              board.chessboard[startRowIndex][0] = "__"
+            elif endColumnIndex == 6: #kingside castle
+              rook = board.chessboard[startRowIndex][7]
+              rook.position = p.Position.convertToPosition(startRowIndex + 1, "F")
+              board.chessboard[startRowIndex][5] = rook
+              board.chessboard[startRowIndex][7] = "__"
+            piece.isAttemptingToCastle = False #resets the attribute
 
           board.checkForPawnPromotion() #checks for pawn promotion every time
 
@@ -168,6 +181,19 @@ while not board.checkForCheckmate("white") and not board.checkForCheckmate("blac
 
           if isinstance(piece, p.Pawn) and piece.isInStartingPosition: #updates the pawn attribute if we move the pawn
             piece.isInStartingPosition = False
+
+          if isinstance(piece, p.King) and piece.isAttemptingToCastle:
+            if endColumnIndex == 2: #queenside castle
+              rook = board.chessboard[startRowIndex][0]
+              rook.position = p.Position.convertToPosition(startRowIndex + 1, "D")
+              board.chessboard[startRowIndex][3] = rook
+              board.chessboard[startRowIndex][0] = "__"
+            elif endColumnIndex == 6: #kingside castle
+              rook = board.chessboard[startRowIndex][7]
+              rook.position = p.Position.convertToPosition(startRowIndex + 1, "F")
+              board.chessboard[startRowIndex][5] = rook
+              board.chessboard[startRowIndex][7] = "__"
+            piece.isAttemptingToCastle = False #resets the attribute          
 
           board.checkForPawnPromotion() #checks for pawn promotion every time
           break
